@@ -9,4 +9,1059 @@
 <body>
     <h1>Hello Git !</h1>
 </body>
+1- COMMENCER 
+
+Bienvenue dans le tutoriel Vue !
+
+Le but de ce didacticiel est de vous donner rapidement une expérience de ce que l'on ressent en travaillant avec Vue, directement dans le navigateur. Il n'a pas vocation à être exhaustif, et vous n'avez pas besoin de tout comprendre avant de passer à autre chose. Cependant, après l'avoir terminé, assurez-vous de lire également le guide qui couvre chaque sujet plus en détail.
+
+Conditions préalables
+
+Le didacticiel suppose une connaissance de base de HTML, CSS et JavaScript. Si vous êtes totalement nouveau dans le développement front-end, ce n'est peut-être pas la meilleure idée de sauter directement dans un framework comme première étape - saisissez les bases puis revenez ! Une expérience préalable avec d'autres cadres aide, mais n'est pas obligatoire.
+
+Comment utiliser ce didacticiel
+
+Vous pouvez modifier le code sur la droite et voir la mise à jour des résultats instantanément. Chaque étape introduira une fonctionnalité principale de Vue, et vous devrez compléter le code pour que la démo fonctionne. Si vous êtes bloqué, vous aurez un "Montre-moi!" bouton qui révèle le code de travail pour vous. Essayez de ne pas trop vous y fier - vous apprendrez plus vite en découvrant les choses par vous-même.
+
+Si vous êtes un développeur expérimenté venant de Vue 2 ou d'autres frameworks, vous pouvez modifier quelques paramètres pour tirer le meilleur parti de ce didacticiel. Si vous êtes débutant, il est recommandé d'utiliser les valeurs par défaut.
+
+Détails des paramètres du didacticiel
+
+Prêt ? Cliquez sur "Suivant" pour commencer.
+
+*************************************
+
+2- Rendu déclaratif
+
+La fonctionnalité principale de Vue est le rendu déclaratif : en utilisant une syntaxe de modèle qui étend le HTML, nous pouvons décrire à quoi le HTML devrait ressembler en fonction de l'état de JavaScript. Lorsque l'état change, le HTML se met à jour automatiquement.
+
+L'état qui peut déclencher des mises à jour lorsqu'il est modifié est considéré comme réactif . Dans Vue, l'état réactif est maintenu dans les composants. Dans l'exemple de code, l'objet transmis createApp()est un composant.
+
+Nous pouvons déclarer l'état réactif en utilisant l' dataoption component, qui devrait être une fonction qui renvoie un objet :
+
+js
+
+createApp({
+
+  data() {
+
+    return {
+
+      message: 'Hello World!'
+
+    }
+
+  }
+
+})
+
+La messagepropriété sera rendue disponible dans le modèle. Voici comment nous pouvons rendre un texte dynamique basé sur la valeur de message, en utilisant la syntaxe des moustaches :
+
+modèle
+
+<h1>{{ message }}</h1>
+
+Le contenu à l'intérieur des moustaches n'est pas limité aux seuls identifiants ou chemins - nous pouvons utiliser n'importe quelle expression JavaScript valide :
+
+modèle
+
+<h1>{{ message.split('').reverse().join('') }}</h1>
+
+Maintenant, essayez de créer vous-même une propriété de données et utilisez-la comme contenu textuel pour <h1>le modèle.
+
+Partie exercice 
+
+<script type="module">
+
+import { createApp } from 'vue'
+
+createApp({
+
+  // component options
+
+  // declare some reactive state here.
+
+}).mount('#app')
+
+</script>
+
+<div id="app">
+
+  <h1>Make me dynamic!</h1>
+
+</div> 
+
+*************************************
+
+3- Liaisons d'attributs
+
+Dans Vue, les moustaches ne sont utilisées que pour l'interpolation de texte. Pour lier un attribut à une valeur dynamique, nous utilisons la v-binddirective :
+
+modèle
+
+<div v-bind:id="dynamicId"></div>
+
+Une directive est un attribut spécial qui commence par le v-préfixe. Ils font partie de la syntaxe du modèle de Vue. Semblables aux interpolations de texte, les valeurs de directive sont des expressions JavaScript qui ont accès à l'état du composant. Les détails complets de la v-bindsyntaxe des directives sont abordés dans Guide - Syntaxe des modèles .
+
+La partie après les deux-points ( :id) est "l'argument" de la directive. Ici, l' idattribut de l'élément sera synchronisé avec la dynamicIdpropriété de l'état du composant.
+
+Parce v-bind qu'il est utilisé si fréquemment, il a une syntaxe abrégée dédiée :
+
+modèle
+
+<div :id="dynamicId"></div>
+
+Maintenant, essayez d'ajouter une classliaison dynamique au <h1>, en utilisant la titleClass propriété data comme valeur. S'il est correctement relié, le texte devrait devenir rouge.
+
+Partie exercise
+
+<script type="module">
+
+import { createApp } from 'vue'
+
+createApp({
+
+  data() {
+
+    return {
+
+      titleClass: 'title'
+
+    }
+
+  }
+
+}).mount('#app')
+
+</script>
+
+<div id="app">
+
+  <h1>Make me red</h1> <!-- add dynamic class binding here -->
+
+</div> 
+
+*************************************
+
+4- Ecouteurs d'événements
+
+Nous pouvons écouter les événements DOM en utilisant la v-ondirective :
+
+modèle
+
+<button v-on:click="increment">{{ count }}
+
+</button>
+
+En raison de son utilisation fréquente, v-ona également une syntaxe abrégée :
+
+modèle
+
+<button @click="increment">{{ count }}
+
+</button>
+
+Ici, increment fait référence à une fonction déclarée à l'aide de l' methodsoption :
+
+js
+
+createApp({
+
+  data() {
+
+    return {
+
+      count: 0
+
+    }
+
+  },
+
+  methods: {
+
+    increment() {
+
+      // update component state
+
+      this.count++
+
+    }
+
+  }
+
+})
+
+Dans une méthode, nous pouvons accéder à l'instance du composant en utilisant this. L'instance de composant expose les propriétés de données déclarées par data. Nous pouvons mettre à jour l'état du composant en mutant ces propriétés.
+
+Les gestionnaires d'événements peuvent également utiliser des expressions en ligne et peuvent simplifier les tâches courantes avec des modificateurs. Ces détails sont traités dans Guide - Gestion des événements .
+
+Maintenant, essayez d'implémenter la increment méthode vous-même et de la lier au bouton en utilisant v-on.
+
+<script type="module">
+
+import { createApp } from 'vue'
+
+createApp({
+
+  data() {
+
+    return {
+
+      count: 0
+
+    }
+
+  }
+
+}).mount('#app')
+
+</script>
+
+<div id="app">
+
+  <!-- make this button work -->
+
+  <button>count is: {{ count }}</button>
+
+</div>
+
+*************************************
+
+5- Liaisons de formulaire
+
+En utilisant v-bind et v-on ensemble, nous pouvons créer des liaisons bidirectionnelles sur les éléments d'entrée de formulaire :
+
+modèle
+
+<input :value="text" @input="onInput">
+
+js
+
+methods: {
+
+  onInput(e) {
+
+    // a v-on handler receives the native DOM event
+
+    // as the argument.
+
+    this.text = e.target.value
+
+  }
+
+}
+
+Essayez de taper dans la zone de saisie - vous devriez voir le texte se mettre à <p> jour au fur et à mesure que vous tapez.
+
+Pour simplifier les liaisons bidirectionnelles, Vue fournit une directive, v-model qui est essentiellement un sucre de syntaxe pour ce qui précède :
+
+modèle
+
+<input v-model="text">
+
+v-model synchronise automatiquement la <input> valeur de avec l'état lié, nous n'avons donc plus besoin d'utiliser un gestionnaire d'événements pour cela.
+
+v-model fonctionne non seulement sur les entrées de texte, mais également sur d'autres types d'entrée tels que les cases à cocher, les boutons radio et les listes déroulantes de sélection. Nous couvrons plus de détails dans Guide-Form Bindings .
+
+Maintenant, essayez de refactoriser le code pour l'utiliser à la v-model place.
+
+<script type="module">
+
+import { createApp } from 'vue'
+
+createApp({
+
+  data() {
+
+    return {
+
+      text: ''
+
+    }
+
+  },
+
+  methods: {
+
+    onInput(e) {
+
+      this.text = e.target.value
+
+    }
+
+  }
+
+}).mount('#app')
+
+</script>
+
+<div id="app">
+
+  <input :value="text" @input="onInput" placeholder="Type here">
+
+  <p>{{ text }}</p>
+
+</div>
+
+*************************************
+
+6- Rendu conditionnel
+
+Nous pouvons utiliser la v-ifdirective pour restituer conditionnellement un élément :
+
+modèle
+
+<h1 v-if="awesome">Vue is awesome!</h1>
+
+Cela <h1>ne sera rendu que si la valeur de awesomeest truthy . Si awesomela valeur est fausse , elle sera supprimée du DOM.
+
+On peut aussi utiliser v-elseet v-else-ifpour désigner d'autres branches de la condition :
+
+modèle
+
+<h1 v-if="awesome">Vue is awesome!</h1>
+
+<h1 v-else>Oh no 😢</h1>
+
+Actuellement, la démo affiche les deux <h1>s en même temps et le bouton ne fait rien. Essayez d'y ajouter des directives et implémentez la v-ifméthode afin que nous puissions utiliser le bouton pour basculer entre elles.v-elsetoggle()
+
+Plus de détails sur v-if: Guide - Rendu conditionnel
+
+<script type="module">
+
+import { createApp } from 'vue'
+
+createApp({
+
+  data() {
+
+    return {
+
+      awesome: true
+
+    }
+
+  },
+
+  methods: {
+
+    toggle() {
+
+      // ...
+
+    }
+
+  }
+
+}).mount('#app')
+
+</script>
+
+<div id="app">
+
+  <button @click="toggle">toggle</button>
+
+  <h1>Vue is awesome!</h1>
+
+  <h1>Oh no 😢</h1>
+
+</div> 
+
+*************************************
+
+7- Rendu de la liste
+
+Nous pouvons utiliser la v-fordirective pour afficher une liste d'éléments basée sur un tableau source :
+
+modèle
+
+<ul>
+
+  <li v-for="todo in todos" :key="todo.id">
+
+    {{ todo.text }}
+
+  </li>
+
+</ul>
+
+Voici todoune variable locale représentant l'élément de tableau en cours d'itération. Il n'est accessible que sur ou à l'intérieur de l' v-forélément, similaire à une portée de fonction.
+
+Remarquez comment nous donnons également à chaque objet todo un unique id, et le lions en tant qu'attribut spécialkey pour chacun <li>. Cela keypermet à Vue de déplacer avec précision chacun <li>pour correspondre à la position de son objet correspondant dans le tableau.
+
+Il existe deux manières de mettre à jour la liste :
+
+Appelez les méthodes de mutation sur le tableau source :
+
+js
+
+this.todos.push(newTodo)
+
+Remplacez le tableau par un nouveau :
+
+js
+
+this.todos = this.todos.filter(/* ... */)
+
+Ici, nous avons une simple liste de tâches - essayez d'implémenter la logique addTodo()et removeTodo()les méthodes pour que cela fonctionne !
+
+Plus de détails sur v-for: Guide - Rendu Liste
+
+<script type="module">
+
+import { createApp } from 'vue'
+
+// give each todo a unique id
+
+let id = 0
+
+createApp({
+
+  data() {
+
+    return {
+
+      newTodo: '',
+
+      todos: [
+
+        { id: id++, text: 'Learn HTML' },
+
+        { id: id++, text: 'Learn JavaScript' },
+
+        { id: id++, text: 'Learn Vue' }
+
+      ]
+
+    }
+
+  },
+
+  methods: {
+
+    addTodo() {
+
+      // ...
+
+      this.newTodo = ''
+
+    },
+
+    removeTodo(todo) {
+
+      // ...
+
+    }
+
+  }
+
+}).mount('#app')
+
+</script>
+
+<div id="app">
+
+  <form @submit.prevent="addTodo">
+
+    <input v-model="newTodo">
+
+    <button>Add Todo</button>    
+
+  </form>
+
+  <ul>
+
+    <li v-for="todo in todos" :key="todo.id">
+
+      {{ todo.text }}
+
+      <button @click="removeTodo(todo)">X</button>
+
+    </li>
+
+  </ul>
+
+</div>
+
+*************************************
+
+8- Propriété calculée
+
+Continuons à bâtir sur la liste des tâches à partir de la dernière étape. Ici, nous avons déjà ajouté une fonctionnalité de basculement à chaque tâche. Cela se fait en ajoutant une donepropriété à chaque objet todo et en l'utilisant v-modelpour la lier à une case à cocher :
+
+modèle
+
+<li v-for="todo in todos">
+
+  <input type="checkbox" v-model="todo.done">
+
+  ...
+
+</li>
+
+La prochaine amélioration que nous pouvons ajouter est de pouvoir masquer les tâches déjà terminées. Nous avons déjà un bouton qui bascule l' hideCompletedétat. Mais comment rendons-nous différents éléments de liste en fonction de cet état ?
+
+Présentation de la propriété calculée . Nous pouvons déclarer une propriété qui est calculée de manière réactive à partir d'autres propriétés en utilisant l' computedoption :
+
+js
+
+createApp({
+
+  // ...
+
+  computed: {
+
+    filteredTodos() {
+
+      // return filtered todos based on `this.hideCompleted`
+
+    }
+
+  }
+
+})
+
+différence
+
+- <li v-for="todo in todos">
+
++ <li v-for="todo in filteredTodos">
+
+Une propriété calculée suit les autres états réactifs utilisés dans son calcul en tant que dépendances. Il met en cache le résultat et le met automatiquement à jour lorsque ses dépendances changent.
+
+Maintenant, essayez d'ajouter la filteredTodospropriété calculée et implémentez sa logique de calcul ! Si elle est correctement implémentée, cocher une tâche lors du masquage des éléments terminés devrait également la masquer instantanément.
+
+<script type="module">
+
+import { createApp } from 'vue'
+
+let id = 0
+
+createApp({
+
+  data() {
+
+    return {
+
+      newTodo: '',
+
+      hideCompleted: false,
+
+      todos: [
+
+        { id: id++, text: 'Learn HTML', done: true },
+
+        { id: id++, text: 'Learn JavaScript', done: true },
+
+        { id: id++, text: 'Learn Vue', done: false }
+
+      ]
+
+    }
+
+  },
+
+  computed: {
+
+    // ...
+
+  },
+
+  methods: {
+
+    addTodo() {
+
+      this.todos.push({ id: id++, text: this.newTodo, done: false })
+
+      this.newTodo = ''
+
+    },
+
+    removeTodo(todo) {
+
+      this.todos = this.todos.filter((t) => t !== todo)
+
+    }
+
+  }
+
+}).mount('#app')
+
+</script>
+
+<div id="app">
+
+  <form @submit.prevent="addTodo">
+
+    <input v-model="newTodo">
+
+    <button>Add Todo</button>
+
+  </form>
+
+  <ul>
+
+    <li v-for="todo in todos" :key="todo.id">
+
+      <input type="checkbox" v-model="todo.done">
+
+      <span :class="{ done: todo.done }">{{ todo.text }}</span>
+
+      <button @click="removeTodo(todo)">X</button>
+
+    </li>
+
+  </ul>
+
+  <button @click="hideCompleted = !hideCompleted">
+
+    {{ hideCompleted ? 'Show all' : 'Hide completed' }}
+
+  </button>
+
+</div>
+
+*************************************
+
+9- Cycle de vie et références de modèle
+
+Jusqu'à présent, Vue gérait pour nous toutes les mises à jour du DOM, grâce à la réactivité et au rendu déclaratif. Cependant, il y aura inévitablement des cas où nous devrons travailler manuellement avec le DOM.
+
+Nous pouvons demander une référence de modèle - c'est-à-dire une référence à un élément du modèle - en utilisant l' attribut spécialref :
+
+modèle
+
+<p ref="p">hello</p>
+
+L'élément sera exposé au this.$refsformat this.$refs.p. Cependant, vous ne pouvez y accéder qu'une fois le composant monté .
+
+Pour exécuter le code après le montage, nous pouvons utiliser l' mountedoption :
+
+js
+
+createApp({
+
+  mounted() {
+
+    // component is now mounted.
+
+  }
+
+})
+
+C'est ce qu'on appelle un hook de cycle de vie - il nous permet d'enregistrer un rappel à appeler à certains moments du cycle de vie du composant. Il existe d'autres crochets tels que createdetupdated . Consultez le diagramme de cycle de vie pour plus de détails.
+
+Maintenant, essayez d'ajouter unmounted hook, accédez au via et effectuez des opérations DOM directes dessus (par exemple, changer son ).<p>this.$refs.ptextContent
+
+<script type="module">
+
+import { createApp } from 'vue'
+
+createApp({
+
+  // ...
+
+}).mount('#app')
+
+</script>
+
+<div id="app">
+
+  <p ref="p">hello</p>
+
+</div>
+
+*************************************
+
+10- Observateurs
+
+Parfois, nous pouvons avoir besoin d'effectuer des "effets secondaires" de manière réactive - par exemple, enregistrer un numéro sur la console lorsqu'il change. Nous pouvons y parvenir avec des observateurs :
+
+js
+
+export default {
+
+  data() {
+
+    return {
+
+      count: 0
+
+    }
+
+  },
+
+  watch: {
+
+    count(newCount) {
+
+      // yes, console.log() is a side effect
+
+      console.log(`new count is: ${newCount}`)
+
+    }
+
+  }
+
+}
+
+Ici, nous utilisons l' watchoption pour surveiller les modifications apportées à la countpropriété. Le rappel watch est appelé en cas countde changement et reçoit la nouvelle valeur comme argument. Plus de détails sont couverts dans Guide-Watchers .
+
+Un exemple plus pratique que la connexion à la console serait de récupérer de nouvelles données lorsqu'un ID change. Le code que nous avons récupère les données todos d'une API fictive sur le montage du composant. Il y a aussi un bouton qui incrémente l'ID de tâche qui doit être récupéré. Essayez d'implémenter un observateur qui récupère une nouvelle tâche lorsque le bouton est cliqué.
+
+<script type="module">
+
+import { createApp } from 'vue'
+
+createApp({
+
+  data() {
+
+    return {
+
+      todoId: 1,
+
+      todoData: null
+
+    }
+
+  },
+
+  methods: {
+
+    async fetchData() {
+
+      this.todoData = null
+
+      const res = await fetch(
+
+        `https://jsonplaceholder.typicode.com/todos/${this.todoId}`
+
+      )
+
+      this.todoData = await res.json()
+
+    }
+
+  },
+
+  mounted() {
+
+    this.fetchData()
+
+  }
+
+}).mount('#app')
+
+</script>
+
+<div id="app">
+
+  <p>Todo id: {{ todoId }}</p>
+
+  <button @click="todoId++">Fetch next todo</button>
+
+  <p v-if="!todoData">Loading...</p>
+
+  <pre v-else>{{ todoData }}</pre>
+
+</div>
+
+*************************************
+
+11- Composants
+
+Jusqu'à présent, nous n'avons travaillé qu'avec un seul composant. Les applications Real Vue sont généralement créées avec des composants imbriqués.
+
+Un composant parent peut restituer un autre composant de son modèle en tant que composant enfant. Pour utiliser un composant enfant, nous devons d'abord l'importer :
+
+js
+
+import ChildComp from './ChildComp.js'
+
+createApp({
+
+  components: {
+
+    ChildComp
+
+  }
+
+})
+
+Nous devons également enregistrer le composant à l'aide de l' componentsoption. Ici, nous utilisons le raccourci de propriété d'objet pour enregistrer le ChildCompcomposant sous la ChildCompclé.
+
+Étant donné que nous écrivons le modèle dans le DOM, il sera soumis aux règles d'analyse du navigateur, qui ne sont pas sensibles à la casse pour les noms de balises. Par conséquent, nous devons utiliser le nom en casse kebab pour référencer le composant enfant :
+
+modèle
+
+<child-comp></child-comp>
+
+Maintenant, essayez-le vous-même - importez le composant enfant et affichez-le dans le modèle.
+
+<script type="module">
+
+import { createApp } from 'vue'
+
+createApp({
+
+  // register child component
+
+}).mount('#app')
+
+</script>
+
+<div id="app">
+
+  <!-- render child component -->
+
+</div>
+
+*************************************
+
+12- Accessoires
+
+Un composant enfant peut accepter une entrée du parent via props . Tout d'abord, il doit déclarer les props qu'il accepte :
+
+js
+
+// in child component
+
+export default {
+
+  props: {
+
+    msg: String
+
+  }
+
+}
+
+Une fois déclaré, le msgprop est exposé thiset peut être utilisé dans le modèle du composant enfant.
+
+Le parent peut transmettre l'accessoire à l'enfant, tout comme les attributs. Pour passer une valeur dynamique, on peut aussi utiliser la v-bindsyntaxe :
+
+modèle
+
+<child-comp :msg="greeting"></child-comp>
+
+Maintenant, essayez-le vous-même dans l'éditeur.<script type="module">
+
+import { createApp } from 'vue'
+
+import ChildComp from './ChildComp.js'
+
+createApp({
+
+  components: {
+
+    ChildComp
+
+  },
+
+  data() {
+
+    return {
+
+      greeting: 'Hello from parent'
+
+    }
+
+  }
+
+}).mount('#app')
+
+</script>
+
+<div id="app">
+
+  <child-comp></child-comp>
+
+</div>
+
+*************************************
+
+13- Émet
+
+En plus de recevoir des accessoires, un composant enfant peut également émettre des événements vers le parent :
+
+js
+
+export default {
+
+  // declare emitted events
+
+  emits: ['response'],
+
+  created() {
+
+    // emit with argument
+
+    this.$emit('response', 'hello from child')
+
+  }
+
+}
+
+Le premier argument de est le nom de l'événement. Tous les arguments supplémentaires sont transmis à l'écouteur d'événement.this.$emit()
+
+Le parent peut écouter les événements émis par l'enfant en utilisant v-on- ici, le gestionnaire reçoit l'argument supplémentaire de l'appel d'émission de l'enfant et l'affecte à l'état local :
+
+modèle
+
+<child-comp @response="(msg) => childMsg = msg"></child-comp>
+
+Maintenant, essayez-le vous-même dans l'éditeur.
+
+<script type="module">
+
+import { createApp } from 'vue'
+
+import ChildComp from './ChildComp.js'
+
+createApp({
+
+  components: {
+
+    ChildComp
+
+  },
+
+  data() {
+
+    return {
+
+      childMsg: 'No child msg yet'
+
+    }
+
+  }
+
+}).mount('#app')
+
+</script>
+
+<div id="app">
+
+  <child-comp></child-comp>
+
+  <p>{{ childMsg }}</p>
+
+</div>
+
+*************************************
+
+14- Machines à sous
+
+En plus de transmettre des données via des accessoires, le composant parent peut également transmettre des fragments de modèle à l'enfant via des slots :
+
+modèle
+
+<child-comp>
+
+  This is some slot content!
+
+</child-comp>
+
+Dans le composant enfant, il peut restituer le contenu de l'emplacement du parent en utilisant l' <slot>élément comme point de vente :
+
+modèle
+
+<!-- in child template -->
+
+<slot></slot>
+
+Le contenu à l'intérieur de l' <slot>outlet sera traité comme un contenu "de secours" : il sera affiché si le parent n'a transmis aucun contenu d'emplacement :
+
+modèle
+
+<slot>Fallback content</slot>
+
+Actuellement, nous ne transmettons aucun contenu d'emplacement à <ChildComp>, vous devriez donc voir le contenu de remplacement. Fournissons du contenu de slot à l'enfant tout en utilisant l' msgétat du parent.<script type="module">
+
+import { createApp } from 'vue'
+
+import ChildComp from './ChildComp.js'
+
+createApp({
+
+  components: {
+
+    ChildComp
+
+  },
+
+  data() {
+
+    return {
+
+      msg: 'from parent'
+
+    }
+
+  }
+
+}).mount('#app')
+
+</script>
+
+<div id="app">
+
+  <child-comp></child-comp>
+
+</div>
+
+*************************************
+
+15- Tu l'as fait!
+
+Vous avez terminé le tutoriel !
+
+À ce stade, vous devriez avoir une bonne idée de ce que c'est que de travailler avec Vue. Cependant, nous avons couvert beaucoup de choses très rapidement et passé sous silence les détails, alors continuez à apprendre ! À l'étape suivante, vous pouvez :
+
+Configurez un vrai projet Vue sur votre machine en suivant le Quick Start .
+
+Parcourez le Guide principal , qui couvre tous les sujets que nous avons appris jusqu'à présent avec plus de détails, et bien plus encore.
+
+Découvrez quelques exemples plus pratiques .
+
+Nous avons hâte de voir ce que vous construisez ensuite !
+
+<script type="module">
+
+import { createApp } from 'vue'
+
+import JSConfetti from 'js-confetti'
+
+const confetti = new JSConfetti()
+
+createApp({
+
+  mounted() {
+
+    this.showConfetti()
+
+  },
+
+  methods: {
+
+    showConfetti() {
+
+      confetti.addConfetti()
+
+    }
+
+  }
+
+}).mount('#app')
+
+</script>
+
+<div id="app">
+
+  <h1 @click="showConfetti">🎉 Congratulations!</h1>
+
+</div>
+
+*************************************
 </html>
